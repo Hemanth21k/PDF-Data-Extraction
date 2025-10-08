@@ -8,8 +8,12 @@ def extract_images_from_pdf(pdf_document:pymupdf.Document, output_dir="output_im
     title = pdf_document.metadata['title']
     pdf_save_path = os.path.join(output_dir,title)
     pdf_images_path = os.path.join(pdf_save_path,"images")
+    pdf_texts_path = os.path.join(pdf_save_path,"texts")
+    
     os.makedirs(pdf_save_path, exist_ok=True)
     os.makedirs(pdf_images_path, exist_ok=True)
+    os.makedirs(pdf_texts_path, exist_ok=True)
+    
     
     
     # Iterate through each page in the PDF
@@ -35,6 +39,13 @@ def extract_images_from_pdf(pdf_document:pymupdf.Document, output_dir="output_im
                 image_file.write(image_bytes)
             
             print(f"Extracted {image_filename}")
+        
+        # Extract text from the page
+        text = page.get_text("text")
+        text_filename = f"page{page_number + 1}_text.txt"
+        text_path = os.path.join(pdf_texts_path, text_filename)
+        with open(text_path, "w", encoding="utf-8") as text_file:
+            text_file.write(text)
     
     print("Image extraction completed.")
 
@@ -47,6 +58,7 @@ def open_pdf(file_path):
         for page_number in range(len(pdf_document)):
             page = pdf_document[page_number]
             print(f"Page {page_number + 1}: {page}")
+            print(page.get_text("text"))
             #Extract images from the page
             # image_list = page.get_images(full=True)
             

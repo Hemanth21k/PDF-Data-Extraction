@@ -16,7 +16,7 @@ output_images/
 		text/       # reserved for extracted text (not implemented)
 ```
 
-The script currently extracts images only. The `tables/` and `text/` folders are included in the README as intended destinations if you extend the project to extract those artifacts.
+The script now extracts images and page-level text. Extracted text is saved under `output_images/<PDF Title>/text/` with one file per page named `page{pagenumber}_text.txt` (for example `page1_text.txt`). The `tables/` folder is still reserved for future table-extraction output.
 
 ## Project structure
 
@@ -69,7 +69,7 @@ Notes:
 python extract_images.py
 ```
 
-By default the script reads the pdf files it finds in `input_pdfs/`, opens it, reads the PDF metadata `title`, and creates an output folder under `output_images/<title>/`. Each extracted image is saved as `output_images/<title>/images/page{page_no}_img{idx}.{ext}`.
+By default the script reads the pdf files it finds in `input_pdfs/`, opens it, reads the PDF metadata `title`, and creates an output folder under `output_images/<title>/`. Each extracted image is saved as `output_images/<title>/images/page{page_no}_img{idx}.{ext}`. Extracted page text is saved as `output_images/<title>/text/page{page_no}_text.txt`.
 
 Example output after running the script on `NIPS-2017-attention-is-all-you-need-Paper.pdf`:
 
@@ -80,11 +80,15 @@ output_images/
 			page3_img1.png
 			page4_img1.png
 			page4_img2.png
+		text/
+			page1_text.txt
+			page2_text.txt
+			page3_text.txt
 ```
 
 ## Extending the script
 
-- To extract text, use PyMuPDF's `page.get_text()` or `page.get_text("blocks")` and save to the `text/` folder.
+- The script now saves page-level text to `output_images/<PDF Title>/text/page{page_no}_text.txt` using PyMuPDF's `page.get_text()` under the hood. You can change the exact extraction method in `extract_images.py` if you want different formatting (for example `get_text("blocks")` or `get_text("words")`).
 - To extract tables, consider using an OCR-based tool or table extraction library and save CSV/JSON to the `tables/` folder.
 
 ## Troubleshooting
