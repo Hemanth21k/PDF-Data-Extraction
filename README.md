@@ -91,10 +91,37 @@ output_images/
 - The script now saves page-level text to `output_images/<PDF Title>/text/page{page_no}_text.txt` using PyMuPDF's `page.get_text()` under the hood. You can change the exact extraction method in `extract_images.py` if you want different formatting (for example `get_text("blocks")` or `get_text("words")`).
 - To extract tables, consider using an OCR-based tool or table extraction library and save CSV/JSON to the `tables/` folder.
 
+## Roadmap: multi-agent summarization & image-aware chat
+
+This project is being extended to support a multi-agent document summarization/chat platform that understands images. High-level milestones:
+
+- Add `extract_data` tool/CLI that writes a `manifest.json` (pages, images, checksums). See `extractor.py`.
+- Build a backend (FastAPI) that exposes `extract_data` as a tool for orchestration frameworks (LangGraph / custom agent runner).
+- Implement VLM image explanation agent and per-page summarizer agents.
+- Create a Supervisor agent that composes page summaries and image explanations into chat messages; expose tokens or structured JSON for frontend rendering.
+- Scaffold a minimal chat frontend (React) to upload PDFs, show manifest pages, and render images inline with captions.
+- Add tests, CI, and a canary rollout plan.
+
+Work-in-progress files:
+
+- `extractor.py` — CLI that wraps `extract_images` and writes `manifest.json` with SHA256 checksums (used by the extractor tool).
+
+Contributions and ideas can be refined here; we will track further sub-tasks as GitHub issues or additional markdown files under `docs/`.
+
 ## Troubleshooting
 
 - If the script fails to open a PDF, check the file path and permissions.
 - If `pdf_document.metadata['title']` is empty, the script will attempt to use an empty folder name; you may want to modify the script to fall back to the filename when title metadata is not present.
+
+## New CLI: extractor.py
+
+Quick usage:
+
+```bash
+python extractor.py input_pdfs/YourDoc.pdf
+```
+
+This will create `output_images/<Title>/` containing `images/`, `texts/`, and `manifest.json` which lists pages, image file names (relative paths), and SHA256 checksums.
 
 ## License
 

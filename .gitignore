@@ -1,0 +1,17 @@
+# Ignore the /venv/
+/venv/
+
+#Ignore the .vscode folder
+.vscode/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Ignore the output images folder
+/output_images/
+
+# Ignore the input PDFs folder
+/input_pdfs/
